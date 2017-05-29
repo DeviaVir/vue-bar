@@ -1,0 +1,49 @@
+{
+  "name": "vuebars",
+  "productionName": "Vue Bars",
+  "version": "0.1.1",
+  "description": "Simple, elegant spark bars for Vue.js",
+  "main": "dist/vue-bars.common.js",
+  "module": "dist/vue-bars.esm.js",
+  "unpkg": "dist/vue-bars.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "eslint src && jest",
+    "dev": "vbuild docs/app.js --dev",
+    "docs:build": "vbuild docs/app.js --dist docs/dist",
+    "deploy": "npm run docs:build && gh-pages -d docs/dist",
+    "build": "rollup -c --environment BUILD && uglifyjs dist/vue-bars.js > dist/vue-bars.min.js"
+  },
+  "keywords": [
+    "vue",
+    "bars",
+    "svg",
+    "graph",
+    "data-visualization",
+    "component"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DeviaVir/vue-bar.git"
+  },
+  "author": "DeviaVir <chase@sillevis.net> (https://github.com/DeviaVir)",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^2.2.4"
+  },
+  "devDependencies": {
+    "eslint": "^3.17.1",
+    "eslint-config-vue": "^2.0.2",
+    "eslint-plugin-vue": "^2.0.1",
+    "gh-pages": "^0.12.0",
+    "hanabi": "^0.4.0",
+    "jest": "^19.0.2",
+    "rollup": "^0.41.4",
+    "rollup-plugin-buble": "^0.15.0",
+    "uglify-js": "^2.8.10",
+    "vbuild": "^6.24.2",
+    "vue-github-badge": "^1.0.0"
+  }
+}
