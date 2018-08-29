@@ -29,7 +29,7 @@ Vue.use(Bars)
 
 *vue template*
 
-```html
+```vue
 <bars
   :data="[1, 2, 5, 9, 5, 10, 3, 5, 2, 5, 1, 8, 2, 9, 0]"
   :gradient="['#6fa8dc', '#42b983']">
@@ -68,7 +68,7 @@ This does mean that all data points will be evenly-spaced. If you have irregular
 As of v1.2.0, you may supply an array of data objects with a `value` property.
 
 ###### Example
-```html
+```vue
 <bars :data="[120, 149, 193.4, 200, 92]" />
 <bars :data="[{ value: 4 }, { value: 6 }, { value: 8 }]" />
 ```
@@ -84,7 +84,7 @@ Vue Barssupports vertical gradients. It accepts an array of 2 colour values, and
 Colour should be specified as a full HEX value.
 
 ###### Example
-```html
+```vue
 <bars :gradient="['#00FFFF', '#FF00FF']" />
 ```
 
@@ -98,7 +98,7 @@ Set an explicit height for your SVG. By default it ensures a 1:4 aspect ratio wi
 Note that in _most_ cases it is sufficient to leave this blank, and just control the size of the parent container.
 
 ###### Example
-```html
+```vue
 <bars :width="200" :height="200" />
 ```
 
@@ -115,7 +115,7 @@ By increasing this number, you expand the space around the line, so that very th
 In most cases you don't need to touch this value.
 
 ###### Example
-```html
+```vue
 <bars padding="18" />
 ```
 
@@ -129,7 +129,7 @@ Set an explicit width for your SVG. By default it ensures a 1:4 aspect ratio wit
 Note that in _most_ cases it is sufficient to leave this blank, and just control the width of the parent container.
 
 ###### Example
-```html
+```vue
 <bars :width="200" :height="200" />
 ```
 
