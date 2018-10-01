@@ -51,19 +51,28 @@ function generateGradientStepsCss(from, to, count) {
  * @param  {object}             boundary
  * @return {object[]}
  */
-function genPoints (arr, ref) {
+function genPoints (arr, ref, ref$1) {
   var minX = ref.minX;
   var minY = ref.minY;
   var maxX = ref.maxX;
   var maxY = ref.maxY;
+  var max = ref$1.max;
+  var min = ref$1.min;
 
+  arr = arr.map(function (item) { return (typeof item === 'number' ? item : item.value); });
+  var minValue = Math.min.apply(Math, arr.concat( [min] )) - 0.001;
   var gridX = (maxX - minX) / (arr.length - 1);
-  var gridY = (maxY - minY) / (Math.max.apply(Math, arr) - Math.min.apply(Math, arr));
+  var gridY = (maxY - minY) / (Math.max.apply(Math, arr.concat( [max] )) + 0.001 - minValue);
 
-  return arr.map(function (item, index) {
-    var value = typeof item === 'number' ? item : item.value;
-
-    return { x: index * gridX + minX, y: maxY - value * gridY, v: value }
+  return arr.map(function (value, index) {
+    return {
+      x: index * gridX + minX,
+      y:
+        maxY -
+        (value - minValue) * gridY +
+        +(index === arr.length - 1) * 0.00001 -
+        +(index === 0) * 0.00001
+    }
   })
 }
 
@@ -112,10 +121,15 @@ function genBars (_this, arr, h) {
 }
 
 var Path = {
-  props: ['smooth', 'data', 'boundary', 'barWidth', 'rounding', 'id', 'gradient', 'growDuration'],
+  props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min'],
 
   render: function render (h) {
-    var points = genPoints(this.data, this.boundary);
+    var ref = this;
+    var data = ref.data;
+    var boundary = ref.boundary;
+    var max = ref.max;
+    var min = ref.min;
+    var points = genPoints(data, boundary, { max: max, min: min } );
     var bars = genBars(this, points, h);
 
     return h('g', {
@@ -134,19 +148,27 @@ var Bars$1 = {
       type: Array,
       required: true
     },
+    autoDraw: Boolean,
     barWidth: {
       type: Number,
       default: 8
-    },
-    rounding: {
-      type: Number,
-      default: 2
     },
     growDuration: {
       type: Number,
       default: 0.5
     },
-    gradient: Array,
+    gradient: {
+      type: Array,
+      default: function () { return ['#000']; }
+    },
+    max: {
+      type: Number,
+      default: -Infinity
+    },
+    min: {
+      type: Number,
+      default: Infinity
+    },
     height: Number,
     width: Number,
     padding: {
@@ -159,7 +181,18 @@ var Bars$1 = {
     data: {
       immediate: true,
       handler: function handler (val) {
-        if (!val || val.length < 2) { return }
+        var this$1 = this;
+
+        this.$nextTick(function () {
+          if (this$1.$isServer || !this$1.$refs.path || !this$1.autoDraw) {
+            return
+          }
+
+          var path = this$1.$refs.path.$el;
+
+          path.style.transform = 'none';
+          path.style.transform = "scale(1,-1) translate(0,-" + (this$1.$refs.path.boundary.maxY) + ")";
+        });
       }
     }
   },
@@ -170,21 +203,18 @@ var Bars$1 = {
     var width = ref.width;
     var height = ref.height;
     var padding = ref.padding;
-    var barWidth = ref.barWidth;
-    var rounding = ref.rounding;
-    var gradient = ref.gradient;
-    var growDuration = ref.growDuration;
     var viewWidth = width || 300;
     var viewHeight = height || 75;
     var boundary = {
-      minX: padding, minY: padding,
-      maxX: viewWidth - padding, maxY: viewHeight - padding
+      minX: padding,
+      minY: padding,
+      maxX: viewWidth - padding,
+      maxY: viewHeight - padding
     };
     var props = this.$props;
 
     props.boundary = boundary;
     props.id = 'vue-bars-' + this._uid;
-    this.pathId = props.id + '-path';
 
     return h('svg', {
       attrs: {
@@ -195,7 +225,6 @@ var Bars$1 = {
     }, [
       h(Path, {
         props: props,
-        attrs: { id: this.pathId },
         ref: 'path'
       })
     ])

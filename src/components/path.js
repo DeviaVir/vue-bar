@@ -1,10 +1,11 @@
 import { genPoints, genBars } from '../helpers/path'
 
 export default {
-  props: ['smooth', 'data', 'boundary', 'barWidth', 'rounding', 'id', 'gradient', 'growDuration'],
+  props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min'],
 
   render (h) {
-    const points = genPoints(this.data, this.boundary)
+    const { data, boundary, max, min } = this
+    const points = genPoints(data, boundary, { max, min } )
     const bars = genBars(this, points, h)
 
     return h('g', {
