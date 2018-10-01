@@ -8,19 +8,27 @@ export default {
       type: Array,
       required: true
     },
+    autoDraw: Boolean,
     barWidth: {
       type: Number,
       default: 8
-    },
-    rounding: {
-      type: Number,
-      default: 2
     },
     growDuration: {
       type: Number,
       default: 0.5
     },
-    gradient: Array,
+    gradient: {
+      type: Array,
+      default: () => ['#000']
+    },
+    max: {
+      type: Number,
+      default: -Infinity
+    },
+    min: {
+      type: Number,
+      default: Infinity
+    },
     height: Number,
     width: Number,
     padding: {
@@ -33,25 +41,35 @@ export default {
     data: {
       immediate: true,
       handler (val) {
-        if (!val || val.length < 2) return
+        this.$nextTick(() => {
+          if (this.$isServer || !this.$refs.path || !this.autoDraw) {
+            return
+          }
+
+          const path = this.$refs.path.$el
+
+          path.style.transform = 'none'
+          path.style.transform = `scale(1,-1) translate(0,-${this.$refs.path.boundary.maxY})`
+        })
       }
     }
   },
 
   render (h) {
     if (!this.data || this.data.length < 2) return
-    const { width, height, padding, barWidth, rounding, gradient, growDuration } = this
+    const { width, height, padding } = this
     const viewWidth = width || 300
     const viewHeight = height || 75
     const boundary = {
-      minX: padding, minY: padding,
-      maxX: viewWidth - padding, maxY: viewHeight - padding
+      minX: padding,
+      minY: padding,
+      maxX: viewWidth - padding,
+      maxY: viewHeight - padding
     }
     const props = this.$props
 
     props.boundary = boundary
     props.id = 'vue-bars-' + this._uid
-    this.pathId = props.id + '-path'
 
     return h('svg', {
       attrs: {
@@ -62,7 +80,6 @@ export default {
     }, [
       h(Path, {
         props,
-        attrs: { id: this.pathId },
         ref: 'path'
       })
     ])

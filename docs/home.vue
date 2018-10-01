@@ -35,10 +35,6 @@
   :growDuration="1">
 </bars>`)
     },
-
-    hover () {
-      console.log('triggered')
-    }
   }
 </script>
 

@@ -6,14 +6,21 @@ import { generateGradientStepsCss } from './gradient'
  * @param  {object}             boundary
  * @return {object[]}
  */
-export function genPoints (arr, { minX, minY, maxX, maxY }) {
+export function genPoints (arr, { minX, minY, maxX, maxY }, { max, min }) {
+  arr = arr.map(item => (typeof item === 'number' ? item : item.value))
+  const minValue = Math.min(...arr, min) - 0.001
   const gridX = (maxX - minX) / (arr.length - 1)
-  const gridY = (maxY - minY) / (Math.max(...arr) - Math.min(...arr))
+  const gridY = (maxY - minY) / (Math.max(...arr, max) + 0.001 - minValue)
 
-  return arr.map((item, index) => {
-    const value = typeof item === 'number' ? item : item.value
-
-    return { x: index * gridX + minX, y: maxY - value * gridY, v: value }
+  return arr.map((value, index) => {
+    return {
+      x: index * gridX + minX,
+      y:
+        maxY -
+        (value - minValue) * gridY +
+        +(index === arr.length - 1) * 0.00001 -
+        +(index === 0) * 0.00001
+    }
   })
 }
 
