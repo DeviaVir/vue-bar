@@ -94,14 +94,17 @@ function genBars (_this, arr, h) {
     _this.rounding = 2;
   }
 
-  var gradients = generateGradientStepsCss(_this.gradient[0], _this.gradient[1], (arr.length-1));
+  var gradients = 0;
+  if (_this.gradient && _this.gradient.length > 1) {
+    gradients = generateGradientStepsCss(_this.gradient[0], _this.gradient[1], (arr.length-1));
+  }
   var offsetX = (totalWidth - _this.barWidth) / 2;
 
   return arr.map(function (item, index) {
     return h('rect', {
       attrs: {
         id: ("bar-id-" + index),
-        fill: gradients[index],
+        fill: (gradients ? gradients[index] : (_this.gradient[0] ? _this.gradient[0] : '#000')),
         x: item.x - offsetX,
         y: 0,
         width: _this.barWidth,
