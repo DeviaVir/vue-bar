@@ -133,6 +133,18 @@ Note that in _most_ cases it is sufficient to leave this blank, and just control
 <bars :width="200" :height="200" />
 ```
 
+## Labels
+
+You can pass an array of objects as data value, and give your labels a `title`. On hover, the label will be displayed.
+
+```vue
+    <bars
+      :data="[{value: 0, title: ''}, {value: 1, title: 'test1'}, {value: 5, title: 'test5'}, {value: 2, title: 'test2'}, {value: 1, title: 'test1'}]"
+      :gradient="gradient"
+      :barWidth="5"
+      :growDuration="1">
+    </bars>
+```
 
 ## TODO
 - Unit test

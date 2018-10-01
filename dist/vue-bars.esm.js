@@ -51,7 +51,7 @@ function generateGradientStepsCss(from, to, count) {
  * @param  {object}             boundary
  * @return {object[]}
  */
-function genPoints (arr, ref, ref$1) {
+function genPoints (inArr, ref, ref$1) {
   var minX = ref.minX;
   var minY = ref.minY;
   var maxX = ref.maxX;
@@ -59,19 +59,21 @@ function genPoints (arr, ref, ref$1) {
   var max = ref$1.max;
   var min = ref$1.min;
 
-  arr = arr.map(function (item) { return (typeof item === 'number' ? item : item.value); });
+  var arr = inArr.map(function (item) { return (typeof item === 'number' ? item : item.value); });
   var minValue = Math.min.apply(Math, arr.concat( [min] )) - 0.001;
   var gridX = (maxX - minX) / (arr.length - 1);
   var gridY = (maxY - minY) / (Math.max.apply(Math, arr.concat( [max] )) + 0.001 - minValue);
 
   return arr.map(function (value, index) {
+    var title = typeof inArr[index] === 'number' ? inArr[index] : inArr[index].title;
     return {
       x: index * gridX + minX,
       y:
         maxY -
         (value - minValue) * gridY +
         +(index === arr.length - 1) * 0.00001 -
-        +(index === 0) * 0.00001
+        +(index === 0) * 0.00001,
+      v: title
     }
   })
 }
