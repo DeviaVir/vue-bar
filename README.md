@@ -146,6 +146,11 @@ You can pass an array of objects as data value, and give your labels a `title`. 
     </bars>
 ```
 
+## On-the-fly reloading
+
+Make sure you use pass the same variable for your `data` as for the `key`, this will make sure Vue recognizes changes to your data array,
+and consequently forces a reload of the instance.
+
 ## TODO
 - Unit test
 

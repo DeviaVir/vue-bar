@@ -37,24 +37,6 @@ export default {
     }
   },
 
-  watch: {
-    data: {
-      immediate: true,
-      handler (val) {
-        this.$nextTick(() => {
-          if (this.$isServer || !this.$refs.path || !this.autoDraw) {
-            return
-          }
-
-          const path = this.$refs.path.$el
-
-          path.style.transform = 'none'
-          path.style.transform = `scale(1,-1) translate(0,-${this.$refs.path.boundary.maxY})`
-        })
-      }
-    }
-  },
-
   render (h) {
     if (!this.data || this.data.length < 2) return
     const { width, height, padding } = this

@@ -184,26 +184,6 @@ var Bars$1 = {
     }
   },
 
-  watch: {
-    data: {
-      immediate: true,
-      handler: function handler (val) {
-        var this$1 = this;
-
-        this.$nextTick(function () {
-          if (this$1.$isServer || !this$1.$refs.path || !this$1.autoDraw) {
-            return
-          }
-
-          var path = this$1.$refs.path.$el;
-
-          path.style.transform = 'none';
-          path.style.transform = "scale(1,-1) translate(0,-" + (this$1.$refs.path.boundary.maxY) + ")";
-        });
-      }
-    }
-  },
-
   render: function render (h) {
     if (!this.data || this.data.length < 2) { return }
     var ref = this;

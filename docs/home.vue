@@ -5,6 +5,7 @@
     <h1>Vue Bars</h1>
     <p> Simple, elegant spark bars for Vue.js</p>
     <bars
+      :key="data"
       :data="data"
       :gradient="gradient"
       :barWidth="5"
@@ -29,6 +30,7 @@
       this.data = [1, 2, 5, 9, 5, 10, 3, 5, 8, 12, 1, 8, 2, 9, 10, 2, 9, 4, 5, 6, 7, 3, 2, 3, 5]
       this.gradient = ['#ffbe88', '#ff93df']
       this.code = hanabi(`<bars
+  :key="reference-to-your-var"
   :data="[1, 2, 5, 9, 5, 10, 3, 5, 8, 12, 1, 8, 2, 9, 10, 2, 9, 4, 5, 6, 7, 3, 2, 3, 5]"
   :gradient="['#ffbe88', '#ff93df']"
   :barWidth="5"
