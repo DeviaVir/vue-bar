@@ -1,7 +1,7 @@
 {
   "name": "vuebars",
   "productionName": "Vue Bars",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Simple, elegant spark bars for Vue.js",
   "main": "dist/vue-bars.common.js",
   "module": "dist/vue-bars.esm.js",
