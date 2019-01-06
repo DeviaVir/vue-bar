@@ -1,7 +1,7 @@
 import Home from './home.vue'
 import Vue from 'vue'
 
-new Vue({ // eslint-disable-line
+new Vue({
   el: '#app',
   ...Home
 })

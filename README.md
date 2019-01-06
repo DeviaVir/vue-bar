@@ -79,7 +79,7 @@ As of v1.2.0, you may supply an array of data objects with a `value` property.
 |----------|----------|-------------|
 | [String] | ✕        | `undefined` |
 
-Vue Barssupports vertical gradients. It accepts an array of 2 colour values, and will fade evenly between them from left to right.
+Vue Bars supports vertical gradients. It accepts an array of 2 colour values, and will fade evenly between them from left to right.
 
 Colour should be specified as a full HEX value.
 
