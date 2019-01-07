@@ -5,7 +5,7 @@ export default {
 
   render (h) {
     const { data, boundary, max, min } = this
-    const points = genPoints(data, boundary, { max, min } )
+    const points = genPoints(data, boundary, { max, min })
     const bars = genBars(this, points, h)
 
     return h('g', {

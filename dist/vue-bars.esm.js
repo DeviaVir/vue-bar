@@ -1,46 +1,49 @@
-function transitionColor(from, to, count) {
+function transitionColor (from, to, count) {
   count = count + 1;
   var int = parseInt(from, 16); // 100
   var intTo = parseInt(to, 16); // 50
   var list = []; // 5
   var diff = int - intTo; // 50
-  var isNegative = diff < 0; // false
   var one = diff / count; // 10
- 
+
   list.push(from);
   for (var i = 1; i <= count; i++) {
     list.push(Math.floor(int - (one * i)).toString(16));
   }
- 
+
   return list
 }
- 
-function transition(from, to, count) {
+
+function transition (from, to, count) {
   count = count || 3;
-  var r = from.slice(0, 2), g = from.slice(2, 4), b = from.slice(4, 6);
-  var rt = to.slice(0, 2), gt = to.slice(2, 4), bt = to.slice(4, 6);
+  var r = from.slice(0, 2);
+  var g = from.slice(2, 4);
+  var b = from.slice(4, 6);
+  var rt = to.slice(0, 2);
+  var gt = to.slice(2, 4);
+  var bt = to.slice(4, 6);
   var allR = transitionColor(r, rt, count);
   var allG = transitionColor(g, gt, count);
   var allB = transitionColor(b, bt, count);
   var list = [];
- 
-  allR.forEach(function(_, i) {
+
+  allR.forEach(function (_, i) {
     list.push('' + allR[i] + allG[i] + allB[i]);
   });
- 
+
   return list
 }
- 
-function generateGradientStepsCss(from, to, count) {
+
+function generateGradientStepsCss (from, to, count) {
   from = from.replace('#', '');
   to = to.replace('#', '');
   var values = transition(from, to, count);
   var total = 100 / (count + 1);
   var obj = [];
   for (var i = 0; i <= count + 1; i++) {
-    obj.push({percentage: Math.floor(total * i), value: values[i]});
+    obj.push({ percentage: Math.floor(total * i), value: values[i] });
   }
-  return obj.map(function(value) {
+  return obj.map(function (value) {
     return '#' + value.value
   })
 }
@@ -80,11 +83,9 @@ function genPoints (inArr, ref, ref$1) {
 
 function genBars (_this, arr, h) {
   var ref = _this.boundary;
-  var minX = ref.minX;
-  var minY = ref.minY;
   var maxX = ref.maxX;
   var maxY = ref.maxY;
-  var totalWidth = (maxX) / (arr.length-1);
+  var totalWidth = (maxX) / (arr.length - 1);
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5);
   }
@@ -94,7 +95,7 @@ function genBars (_this, arr, h) {
 
   var gradients = 0;
   if (_this.gradient && _this.gradient.length > 1) {
-    gradients = generateGradientStepsCss(_this.gradient[0], _this.gradient[1], (arr.length-1));
+    gradients = generateGradientStepsCss(_this.gradient[0], _this.gradient[1], (arr.length - 1));
   }
   var offsetX = (totalWidth - _this.barWidth) / 2;
 
@@ -134,7 +135,7 @@ var Path = {
     var boundary = ref.boundary;
     var max = ref.max;
     var min = ref.min;
-    var points = genPoints(data, boundary, { max: max, min: min } );
+    var points = genPoints(data, boundary, { max: max, min: min });
     var bars = genBars(this, points, h);
 
     return h('g', {
@@ -145,7 +146,7 @@ var Path = {
   }
 };
 
-var Bars$1 = {
+var Bars = {
   name: 'Bars',
 
   props: {
@@ -216,12 +217,12 @@ var Bars$1 = {
   }
 };
 
-Bars$1.install = function (Vue) {
-  Vue.component(Bars$1.name, Bars$1);
+Bars.install = function (Vue) {
+  Vue.component(Bars.name, Bars);
 };
 
 if (typeof window !== 'undefined' && window.Vue) {
-  window.Vue.use(Bars$1);
+  window.Vue.use(Bars);
 }
 
-export default Bars$1;
+export default Bars;
