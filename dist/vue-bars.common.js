@@ -61,23 +61,37 @@ function genPoints (inArr, ref, ref$1) {
   var minY = ref.minY;
   var maxX = ref.maxX;
   var maxY = ref.maxY;
+  var minBarHeight = ref.minBarHeight;
   var max = ref$1.max;
   var min = ref$1.min;
 
   var arr = inArr.map(function (item) { return (typeof item === 'number' ? item : item.value); });
-  var minValue = Math.min.apply(Math, arr.concat( [min] )) - 0.001;
+  var minValue = Math.min.apply(Math, arr.concat( [min] ));
+  var maxValue = Math.max.apply(Math, arr.concat( [max] ));
+  var absMaxVal = Math.abs(maxValue);
+  var absMinVal = Math.abs(minValue);
   var gridX = (maxX - minX) / (arr.length - 1);
-  var gridY = (maxY - minY) / (Math.max.apply(Math, arr.concat( [max] )) + 0.001 - minValue);
+
+  var delta = 0;
+  if (minValue < 0 && maxValue < 0) {
+    delta = absMinVal;
+  } else if (minValue < 0 && maxValue >= 0) {
+    delta = absMinVal + absMaxVal;
+  } else if (minValue >= 0 && maxValue >= 0) {
+    delta = maxValue;
+  }
+
+  var heightMultiplier = delta !== 0 ? (maxY - minY) / delta : 1;
+  var zeroLine = minValue < 0 ? absMinVal : 0;
 
   return arr.map(function (value, index) {
     var title = typeof inArr[index] === 'number' ? inArr[index] : inArr[index].title;
+    var height = Math.abs(value);
+    var barHeight = height * heightMultiplier > minBarHeight ? height * heightMultiplier : minBarHeight;
     return {
       x: index * gridX + minX,
-      y:
-        maxY -
-        (value - minValue) * gridY +
-        +(index === arr.length - 1) * 0.00001 -
-        +(index === 0) * 0.00001,
+      y: value >= 0 || value === 0 && minValue >= 0 ? zeroLine * heightMultiplier : zeroLine * heightMultiplier - barHeight,
+      height: barHeight,
       v: title
     }
   })
@@ -86,7 +100,6 @@ function genPoints (inArr, ref, ref$1) {
 function genBars (_this, arr, h) {
   var ref = _this.boundary;
   var maxX = ref.maxX;
-  var maxY = ref.maxY;
   var totalWidth = (maxX) / (arr.length - 1);
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5);
@@ -107,9 +120,9 @@ function genBars (_this, arr, h) {
         id: ("bar-id-" + index),
         fill: (gradients ? gradients[index] : (_this.gradient[0] ? _this.gradient[0] : '#000')),
         x: item.x - offsetX,
-        y: 0,
+        y: item.y,
         width: _this.barWidth,
-        height: (maxY - item.y),
+        height: item.height,
         rx: _this.rounding,
         ry: _this.rounding
       }
@@ -118,7 +131,7 @@ function genBars (_this, arr, h) {
         attrs: {
           attributeName: 'height',
           from: 0,
-          to: (maxY - item.y),
+          to: item.height,
           dur: ((_this.growDuration) + "s"),
           fill: 'freeze'
         }
@@ -177,6 +190,10 @@ var Bars = {
       type: Number,
       default: Infinity
     },
+    minBarHeight: {
+      type: Number,
+      default: 5
+    },
     height: Number,
     width: Number,
     padding: {
@@ -197,7 +214,8 @@ var Bars = {
       minX: padding,
       minY: padding,
       maxX: viewWidth - padding,
-      maxY: viewHeight - padding
+      maxY: viewHeight - padding,
+      minBarHeight: this.minBarHeight
     };
     var props = this.$props;
 

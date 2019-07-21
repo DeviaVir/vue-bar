@@ -29,6 +29,10 @@ export default {
       type: Number,
       default: Infinity
     },
+    minBarHeight: {
+      type: Number,
+      default: 5
+    },
     height: Number,
     width: Number,
     padding: {
@@ -46,7 +50,8 @@ export default {
       minX: padding,
       minY: padding,
       maxX: viewWidth - padding,
-      maxY: viewHeight - padding
+      maxY: viewHeight - padding,
+      minBarHeight: this.minBarHeight
     }
     const props = this.$props
 

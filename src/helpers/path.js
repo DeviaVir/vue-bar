@@ -6,28 +6,41 @@ import { generateGradientStepsCss } from './gradient'
  * @param  {object}             boundary
  * @return {object[]}
  */
-export function genPoints (inArr, { minX, minY, maxX, maxY }, { max, min }) {
+export function genPoints (inArr, { minX, minY, maxX, maxY, minBarHeight }, { max, min }) {
   const arr = inArr.map(item => (typeof item === 'number' ? item : item.value))
-  const minValue = Math.min(...arr, min) - 0.001
+  const minValue = Math.min(...arr, min)
+  const maxValue = Math.max(...arr, max)
+  const absMaxVal = Math.abs(maxValue)
+  const absMinVal = Math.abs(minValue)
   const gridX = (maxX - minX) / (arr.length - 1)
-  const gridY = (maxY - minY) / (Math.max(...arr, max) + 0.001 - minValue)
+
+  let delta = 0
+  if (minValue < 0 && maxValue < 0) {
+    delta = absMinVal
+  } else if (minValue < 0 && maxValue >= 0) {
+    delta = absMinVal + absMaxVal
+  } else if (minValue >= 0 && maxValue >= 0) {
+    delta = maxValue
+  }
+
+  const heightMultiplier = delta !== 0 ? (maxY - minY) / delta : 1
+  const zeroLine = minValue < 0 ? absMinVal : 0
 
   return arr.map((value, index) => {
     const title = typeof inArr[index] === 'number' ? inArr[index] : inArr[index].title
+    const height = Math.abs(value)
+    const barHeight = height * heightMultiplier > minBarHeight ? height * heightMultiplier : minBarHeight
     return {
       x: index * gridX + minX,
-      y:
-        maxY -
-        (value - minValue) * gridY +
-        +(index === arr.length - 1) * 0.00001 -
-        +(index === 0) * 0.00001,
+      y: value >= 0 || value === 0 && minValue >= 0 ? zeroLine * heightMultiplier : zeroLine * heightMultiplier - barHeight,
+      height: barHeight,
       v: title
     }
   })
 }
 
 export function genBars (_this, arr, h) {
-  const { maxX, maxY } = _this.boundary
+  const { maxX } = _this.boundary
   const totalWidth = (maxX) / (arr.length - 1)
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5)
@@ -48,9 +61,9 @@ export function genBars (_this, arr, h) {
         id: `bar-id-${index}`,
         fill: (gradients ? gradients[index] : (_this.gradient[0] ? _this.gradient[0] : '#000')),
         x: item.x - offsetX,
-        y: 0,
+        y: item.y,
         width: _this.barWidth,
-        height: (maxY - item.y),
+        height: item.height,
         rx: _this.rounding,
         ry: _this.rounding
       }
@@ -59,7 +72,7 @@ export function genBars (_this, arr, h) {
         attrs: {
           attributeName: 'height',
           from: 0,
-          to: (maxY - item.y),
+          to: item.height,
           dur: `${_this.growDuration}s`,
           fill: 'freeze'
         }
