@@ -66,6 +66,7 @@
     var maxX = ref.maxX;
     var maxY = ref.maxY;
     var minBarHeight = ref.minBarHeight;
+    var labelRotate = ref.labelRotate;
     var max = ref$1.max;
     var min = ref$1.min;
 
@@ -75,6 +76,7 @@
     var absMaxVal = Math.abs(maxValue);
     var absMinVal = Math.abs(minValue);
     var gridX = (maxX - minX) / (arr.length - 1);
+    var labelHeight = 20;
 
     var delta = 0;
     if (minValue < 0 && maxValue < 0) {
@@ -85,18 +87,21 @@
       delta = maxValue;
     }
 
-    var heightMultiplier = delta !== 0 ? (maxY - minY) / delta : 1;
+    var heightMultiplier = delta !== 0 ? (maxY - minY - labelHeight) / delta : 1;
+    var yAdjust = minValue * heightMultiplier < minBarHeight ? minBarHeight : 0;
     var zeroLine = minValue < 0 ? absMinVal : 0;
 
     return arr.map(function (value, index) {
-      var title = typeof inArr[index] === 'number' ? inArr[index] : inArr[index].title;
+      var label = typeof inArr[index].title !== 'undefined' ? inArr[index].title : '';
+      var title = typeof inArr[index].value === 'number' ? inArr[index].value : inArr[index];
       var height = Math.abs(value);
-      var barHeight = height * heightMultiplier > minBarHeight ? height * heightMultiplier : minBarHeight;
+      var barHeight = (height * heightMultiplier - yAdjust > minBarHeight ? height * heightMultiplier - yAdjust : minBarHeight);
       return {
         x: index * gridX + minX,
-        y: value >= 0 || value === 0 && minValue >= 0 ? zeroLine * heightMultiplier : zeroLine * heightMultiplier - barHeight,
+        y: maxY - barHeight - (value >= 0 || value === 0 && minValue >= 0 ? zeroLine * heightMultiplier : zeroLine * heightMultiplier - barHeight) - labelHeight - yAdjust,
         height: barHeight,
-        v: title
+        label: label,
+        title: title
       }
     })
   }
@@ -104,6 +109,9 @@
   function genBars (_this, arr, h) {
     var ref = _this.boundary;
     var maxX = ref.maxX;
+    var maxY = ref.maxY;
+    var labelRotate = ref.labelRotate;
+    var labelColor = ref.labelColor;
     var totalWidth = (maxX) / (arr.length - 1);
     if (!_this.barWidth) {
       _this.barWidth = totalWidth - (_this.padding || 5);
@@ -118,7 +126,7 @@
     }
     var offsetX = (totalWidth - _this.barWidth) / 2;
 
-    return arr.map(function (item, index) {
+    var rects = arr.map(function (item, index) {
       return h('rect', {
         attrs: {
           id: ("bar-id-" + index),
@@ -140,9 +148,48 @@
             fill: 'freeze'
           }
         }),
-        h('title', {}, [item.v])
+        h('title', {}, [item.title])
       ])
-    })
+    });
+    var translateOffsetX = labelRotate >= 0 ? 10 : -10;
+    var xaxis = h(
+      'g',
+      {
+        attrs: {
+          class: 'x-axis',
+          transform: ("translate(" + translateOffsetX + "," + (maxY - 8) + ")")
+        }
+      },
+      arr.map(function (item, index) {
+        var labelOffsetX = labelRotate < 0 ? item.x + offsetX : item.x - offsetX;
+        return h(
+          'g',
+          {
+            attrs: {
+              class: 'v-bars--tick',
+              transform: ("translate(" + labelOffsetX + ",0) rotate(" + labelRotate + ")")
+            }
+          },
+          [
+            h(
+              'text',
+              {
+                attrs: {
+                  class: 'v-bars--label-text',
+                  style: ("text-anchor:middle; fill:" + labelColor + ";"),
+                  'font-size': '0.7em',
+                  title: item.title
+                }
+              },
+              [
+                item.label
+              ]
+            )
+          ]
+        )
+      })
+    );
+    return rects.concat(xaxis);
   }
 
   var Path = {
@@ -157,11 +204,14 @@
       var points = genPoints(data, boundary, { max: max, min: min });
       var bars = genBars(this, points, h);
 
-      return h('g', {
-        attrs: {
-          transform: ("scale(1,-1) translate(0,-" + (this.boundary.maxY) + ")")
-        }
-      }, bars)
+      return h(
+        'g',
+        {
+          class: 'container',
+          transform: ("translate(0," + (this.boundary.maxY) + ")")
+        },
+        bars
+      )
     }
   };
 
@@ -196,7 +246,15 @@
       },
       minBarHeight: {
         type: Number,
-        default: 5
+        default: 3
+      },
+      labelRotate: {
+        type: Number,
+        default: -45
+      },
+      labelColor: {
+        type: String,
+        default: '#999999'
       },
       height: Number,
       width: Number,
@@ -219,7 +277,9 @@
         minY: padding,
         maxX: viewWidth - padding,
         maxY: viewHeight - padding,
-        minBarHeight: this.minBarHeight
+        minBarHeight: this.minBarHeight,
+        labelRotate: this.labelRotate,
+        labelColor: this.labelColor
       };
       var props = this.$props;
 

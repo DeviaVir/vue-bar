@@ -8,10 +8,13 @@ export default {
     const points = genPoints(data, boundary, { max, min })
     const bars = genBars(this, points, h)
 
-    return h('g', {
-      attrs: {
-        transform: `scale(1,-1) translate(0,-${this.boundary.maxY})`
-      }
-    }, bars)
+    return h(
+      'g',
+      {
+        class: 'container',
+        transform: `translate(0,${this.boundary.maxY})`
+      },
+      bars
+    )
   }
 }
