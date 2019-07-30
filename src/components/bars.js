@@ -29,6 +29,18 @@ export default {
       type: Number,
       default: Infinity
     },
+    minBarHeight: {
+      type: Number,
+      default: 3
+    },
+    labelRotate: {
+      type: Number,
+      default: -45
+    },
+    labelColor: {
+      type: String,
+      default: '#999999'
+    },
     height: Number,
     width: Number,
     padding: {
@@ -46,7 +58,10 @@ export default {
       minX: padding,
       minY: padding,
       maxX: viewWidth - padding,
-      maxY: viewHeight - padding
+      maxY: viewHeight - padding,
+      minBarHeight: this.minBarHeight,
+      labelRotate: this.labelRotate,
+      labelColor: this.labelColor
     }
     const props = this.$props
 
