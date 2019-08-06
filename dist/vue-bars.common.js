@@ -63,6 +63,7 @@ function genPoints (inArr, ref, ref$1) {
   var maxY = ref.maxY;
   var minBarHeight = ref.minBarHeight;
   var labelRotate = ref.labelRotate;
+  var labelSize = ref.labelSize;
   var max = ref$1.max;
   var min = ref$1.min;
 
@@ -108,6 +109,7 @@ function genBars (_this, arr, h) {
   var maxY = ref.maxY;
   var labelRotate = ref.labelRotate;
   var labelColor = ref.labelColor;
+  var labelSize = ref.labelSize;
   var totalWidth = (maxX) / (arr.length - 1);
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5);
@@ -172,8 +174,7 @@ function genBars (_this, arr, h) {
             {
               attrs: {
                 class: 'v-bars--label-text',
-                style: ("text-anchor:middle; fill:" + labelColor + ";"),
-                'font-size': '0.7em',
+                style: ("text-anchor:middle; fill:" + labelColor + "; font-size: " + labelSize + "em;"),
                 title: item.title
               }
             },
@@ -246,7 +247,11 @@ var Bars = {
     },
     labelRotate: {
       type: Number,
-      default: -45
+      default: 0
+    },
+    labelSize: {
+      type: Number,
+      default: 0.7
     },
     labelColor: {
       type: String,
@@ -275,7 +280,8 @@ var Bars = {
       maxY: viewHeight - padding,
       minBarHeight: this.minBarHeight,
       labelRotate: this.labelRotate,
-      labelColor: this.labelColor
+      labelColor: this.labelColor,
+      labelSize: this.labelSize
     };
     var props = this.$props;
 
