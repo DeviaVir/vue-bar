@@ -1,13 +1,17 @@
-import { genPoints, genBars } from '../helpers/path'
+import { genPoints, genBars, genLabels } from '../helpers/path'
 
 export default {
-  props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min'],
+  props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min', 'labelData', 'labelProps'],
 
   render (h) {
-    const { data, boundary, max, min } = this
-    const points = genPoints(data, boundary, { max, min })
-    const bars = genBars(this, points, h)
+    const { data, boundary, max, min, labelData } = this
+    const points = genPoints(data, boundary, { max, min }, labelData.length)
+    const labels = genLabels(this, points, labelData, h)
+    let bars = genBars(this, points, h)
 
+    if (labels.children.length) {
+      bars = bars.concat(labels)
+    }
     return h(
       'g',
       {
