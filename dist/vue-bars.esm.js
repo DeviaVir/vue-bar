@@ -149,6 +149,7 @@ function genLabels (_this, arr, labels, h) {
   var maxX = ref.maxX;
   var maxY = ref.maxY;
   var labelRotate = ref.labelRotate;
+  var labelSize = ref.labelSize;
   var labelColor = ref.labelColor;
   var totalWidth = (maxX) / (arr.length - 1);
   if (!_this.barWidth) {
@@ -185,8 +186,7 @@ function genLabels (_this, arr, labels, h) {
             {
               attrs: {
                 class: 'v-bars--label-text',
-                style: ("text-anchor:middle; fill:" + labelColor + ";"),
-                'font-size': '0.7em',
+                style: ("text-anchor:middle; fill:" + labelColor + "; font-size:" + labelSize + "em;"),
                 title: title
               }
             },
@@ -270,6 +270,10 @@ var Bars = {
       type: Number,
       default: -45
     },
+    labelSize: {
+      type: Number,
+      default: 0.7
+    },
     labelColor: {
       type: String,
       default: '#999999'
@@ -304,6 +308,7 @@ var Bars = {
       maxY: viewHeight - padding,
       labelData: this.labelData,
       labelRotate: this.labelRotate,
+      labelSize: this.labelSize,
       labelColor: this.labelColor
     };
     var props = this.$props;

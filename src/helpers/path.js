@@ -88,7 +88,7 @@ export function genBars (_this, arr, h) {
 }
 
 export function genLabels (_this, arr, labels, h) {
-  const { maxX, maxY, labelRotate, labelColor } = _this.labelProps
+  const { maxX, maxY, labelRotate, labelSize, labelColor } = _this.labelProps
   const totalWidth = (maxX) / (arr.length - 1)
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5)
@@ -124,8 +124,7 @@ export function genLabels (_this, arr, labels, h) {
             {
               attrs: {
                 class: 'v-bars--label-text',
-                style: `text-anchor:middle; fill:${labelColor};`,
-                'font-size': '0.7em',
+                style: `text-anchor:middle; fill:${labelColor}; font-size:${labelSize}em;`,
                 title: title
               }
             },

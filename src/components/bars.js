@@ -41,6 +41,10 @@ export default {
       type: Number,
       default: -45
     },
+    labelSize: {
+      type: Number,
+      default: 0.7
+    },
     labelColor: {
       type: String,
       default: '#999999'
@@ -72,6 +76,7 @@ export default {
       maxY: viewHeight - padding,
       labelData: this.labelData,
       labelRotate: this.labelRotate,
+      labelSize: this.labelSize,
       labelColor: this.labelColor
     }
     const props = this.$props
