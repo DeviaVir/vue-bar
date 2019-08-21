@@ -108,7 +108,7 @@ export function genLabels (_this, arr, labels, h) {
       }
     },
     arr.map((item, index) => {
-      const labelOffsetX = labelRotate < 0 ? item.x + offsetX : item.x - offsetX;
+      const labelOffsetX = labelRotate < 0 ? item.x + offsetX : item.x - offsetX
       const title = labels[index]
       return h(
         'g',
