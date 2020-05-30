@@ -8,7 +8,7 @@
       :key="data"
       :data="getData()"
       :gradient="[color1, color2]"
-      :barWidth="width"
+      :barWidth="barWidth"
       :rounding="radius"
       :padding="padding"
       :labelColor="labelColor"
@@ -25,7 +25,7 @@
             <div class="settings-column">
               <div>
                 <div class="setting-label">Width</div>
-                <vue-slider v-model="width" :min="1" :max="12" :interval="0.1"></vue-slider>
+                <vue-slider v-model="barWidth" :min="1" :max="12" :interval="0.1"></vue-slider>
               </div>
 
               <div>
@@ -81,7 +81,7 @@
       </vue-tabs>
     </div>
 
-    <footer>Released under the <a href="//github.com/deviavir/vue-bars/blob/master/LICENSE">MIT</a> license. <a href="//github.com/deviavir/vue-bars">View source.</a></footer>
+    <footer>Released under the <a href="//github.com/deviavir/vue-bars/blob/master/LICENSE">MIT</a> license. <a href="//github.com/deviavir/vue-bars">View source</a>.</footer>
   </main>
 </template>
 
@@ -101,7 +101,7 @@
 
     data: function () {
       return {
-        width: 4,
+        barWidth: 4,
         radius: 2,
         padding: 8,
         color1: '#ffbe88',
@@ -119,15 +119,21 @@
       }
     },
 
+    computed: {
+      code: function(){
+        return hanabi(`<bars
+  :key="reference-to-your-var"
+  :data="${ this.showLabels ? '[{value: 1, title: \'#1\'}, {value: 2, title: \'#2\'}, ... ]' : '[1, 2, ... ]' }"
+  :gradient="['${ this.color1 }', '${ this.color2 }']"
+  :barWidth="${ this.barWidth }"
+  :rounding="${ this.radius }"${ this.showLabels ? '\n  :labelColor="' + this.labelColor + '"\n' : ''}  ${ this.showLabels ? ':labelRotate="' + this.labelRotate + '"\n' : ''}  ${ this.showLabels ? ':labelSize="' + this.labelSize + '"' : ''}
+  :growDuration="1">
+</bars>`);
+      }
+    },
+
     created () {
       this.data = [{value: 1, title: '#1'}, {value: 2, title: '#2'}, {value: 5, title: '#3'}, {value: 9, title: '#4'}, {value: 5, title: '#5'}, {value: 10, title: '#6'}, {value: 3, title: '#7'}, {value: 5, title: '#8'}, {value: 8, title: '#9'}, {value: 12, title: '#10'}, {value: 1, title: '#11'}, {value: 8, title: '#12'}, {value: 2, title: '#13'}, {value: 9, title: '#14'}, {value: 10, title: '#15'}, {value: 2, title: '#16'}, {value: 9, title: '#17'}, {value: 4, title: '#18'}, {value: 5, title: '#19'}, {value: 6, title: '#20'}, {value: 7, title: '#21'}, {value: 3, title: '#22'}, {value: 2, title: '#23'}, {value: 3, title: '#24'}, {value: 5, title: '#25'}]
-      this.code = hanabi(`<bars
-  :key="reference-to-your-var"
-  :data="[1, 2, 5, 9, 5, 10, 3, 5, 8, 12, 1, 8, 2, 9, 10, 2, 9, 4, 5, 6, 7, 3, 2, 3, 5]"
-  :gradient="['#ffbe88', '#ff93df']"
-  :barWidth="5"
-  :growDuration="1">
-</bars>`)
     },
   }
 </script>
@@ -160,10 +166,11 @@
   .code-wrap {
     text-align: left;
     background-color: #f8f8f8;
-    padding: 1.2em 1.4em;
+    padding: 2em 1.4em;
     line-height: 1.5em;
-    margin: 60px 0 0;
+    margin: 0;
     overflow: auto;
+    font-size: 1rem;
   }
 
   .code {
