@@ -69,7 +69,7 @@
 
               <div>
                 <div class="setting-label">Label size</div>
-                <vue-slider v-model="labelSize" :min="0.2" :max="1.5" :interval="0.1"></vue-slider>
+                <vue-slider v-model="labelSize" :min="0.2" :max="1.5" :interval="0.01"></vue-slider>
               </div>
             </div>
           </div>
