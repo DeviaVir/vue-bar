@@ -13,6 +13,10 @@ export default {
       type: Number,
       default: 8
     },
+    rounding: {
+      type: Number,
+      default: 2
+    },
     growDuration: {
       type: Number,
       default: 0.5
@@ -41,6 +45,10 @@ export default {
       type: String,
       default: '#999999'
     },
+    labelSize: {
+      type: Number,
+      default: 0.7
+    },
     height: Number,
     width: Number,
     padding: {
@@ -61,7 +69,8 @@ export default {
       maxY: viewHeight - padding,
       minBarHeight: this.minBarHeight,
       labelRotate: this.labelRotate,
-      labelColor: this.labelColor
+      labelColor: this.labelColor,
+      labelSize: this.labelSize
     }
     const props = this.$props
 

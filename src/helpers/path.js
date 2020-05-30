@@ -44,7 +44,7 @@ export function genPoints (inArr, { minX, minY, maxX, maxY, minBarHeight, labelR
 }
 
 export function genBars (_this, arr, h) {
-  const { maxX, maxY, labelRotate, labelColor } = _this.boundary
+  const { maxX, maxY, labelRotate, labelColor, labelSize } = _this.boundary
   const totalWidth = (maxX) / (arr.length - 1)
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5)
@@ -109,8 +109,7 @@ export function genBars (_this, arr, h) {
             {
               attrs: {
                 class: 'v-bars--label-text',
-                style: `text-anchor:middle; fill:${labelColor};`,
-                'font-size': '0.7em',
+                style: `text-anchor:middle; fill:${labelColor}; font-size:${labelSize}em;`,
                 title: item.title
               }
             },
