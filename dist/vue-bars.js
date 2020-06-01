@@ -56,18 +56,18 @@
 
   /**
    *  Calculate the coordinate
-   * @param  {number[]|object[]}  arr
-   * @param  {object}             boundary
+   * @param {number[]|object[]} inArr
+   * @param {object} boundary
+   * @param {object} props
+   * @param {boolean} hasLabels
    * @return {object[]}
    */
-  function genPoints (inArr, ref, ref$1) {
+  function genPoints (inArr, ref, ref$1, hasLabels) {
     var minX = ref.minX;
     var minY = ref.minY;
     var maxX = ref.maxX;
     var maxY = ref.maxY;
     var minBarHeight = ref.minBarHeight;
-    var labelRotate = ref.labelRotate;
-    var labelSize = ref.labelSize;
     var max = ref$1.max;
     var min = ref$1.min;
 
@@ -77,7 +77,7 @@
     var absMaxVal = Math.abs(maxValue);
     var absMinVal = Math.abs(minValue);
     var gridX = (maxX - minX) / (arr.length - 1);
-    var labelHeight = 20;
+    var labelHeight = hasLabels ? 20 : 0;
 
     var delta = 0;
     if (minValue < 0 && maxValue < 0) {
@@ -93,15 +93,13 @@
     var zeroLine = minValue < 0 ? absMinVal : 0;
 
     return arr.map(function (value, index) {
-      var label = typeof inArr[index].title !== 'undefined' ? inArr[index].title : '';
-      var title = typeof inArr[index].value === 'number' ? inArr[index].value : inArr[index];
+      var title = typeof inArr[index] === 'number' ? inArr[index] : inArr[index].title;
       var height = Math.abs(value);
       var barHeight = (height * heightMultiplier - yAdjust > minBarHeight ? height * heightMultiplier - yAdjust : minBarHeight);
       return {
         x: index * gridX + minX,
         y: maxY - barHeight - (value >= 0 || value === 0 && minValue >= 0 ? zeroLine * heightMultiplier : zeroLine * heightMultiplier - barHeight) - labelHeight - yAdjust,
         height: barHeight,
-        label: label,
         title: title
       }
     })
@@ -110,10 +108,6 @@
   function genBars (_this, arr, h) {
     var ref = _this.boundary;
     var maxX = ref.maxX;
-    var maxY = ref.maxY;
-    var labelRotate = ref.labelRotate;
-    var labelColor = ref.labelColor;
-    var labelSize = ref.labelSize;
     var totalWidth = (maxX) / (arr.length - 1);
     if (!_this.barWidth) {
       _this.barWidth = totalWidth - (_this.padding || 5);
@@ -153,6 +147,25 @@
         h('title', {}, [item.title])
       ])
     });
+    return rects
+  }
+
+  function genLabels (_this, arr, labels, h) {
+    var ref = _this.labelProps;
+    var maxX = ref.maxX;
+    var maxY = ref.maxY;
+    var labelRotate = ref.labelRotate;
+    var labelSize = ref.labelSize;
+    var labelColor = ref.labelColor;
+    var totalWidth = (maxX) / (arr.length - 1);
+    if (!_this.barWidth) {
+      _this.barWidth = totalWidth - (_this.padding || 5);
+    }
+    if (!_this.rounding) {
+      _this.rounding = 2;
+    }
+
+    var offsetX = (totalWidth - _this.barWidth) / 2;
     var translateOffsetX = labelRotate >= 0 ? 10 : -10;
     var xaxis = h(
       'g',
@@ -164,6 +177,7 @@
       },
       arr.map(function (item, index) {
         var labelOffsetX = labelRotate < 0 ? item.x + offsetX : item.x - offsetX;
+        var title = labels[index];
         return h(
           'g',
           {
@@ -179,22 +193,22 @@
                 attrs: {
                   class: 'v-bars--label-text',
                   style: ("text-anchor:middle; fill:" + labelColor + "; font-size:" + labelSize + "em;"),
-                  title: item.title
+                  title: title
                 }
               },
               [
-                item.label
+                title
               ]
             )
           ]
         )
       })
     );
-    return rects.concat(xaxis);
+    return xaxis
   }
 
   var Path = {
-    props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min'],
+    props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min', 'labelData', 'labelProps'],
 
     render: function render (h) {
       var ref = this;
@@ -202,9 +216,14 @@
       var boundary = ref.boundary;
       var max = ref.max;
       var min = ref.min;
-      var points = genPoints(data, boundary, { max: max, min: min });
+      var labelData = ref.labelData;
+      var points = genPoints(data, boundary, { max: max, min: min }, labelData.length);
+      var labels = genLabels(this, points, labelData, h);
       var bars = genBars(this, points, h);
 
+      if (labels.children.length) {
+        bars = bars.concat(labels);
+      }
       return h(
         'g',
         {
@@ -249,17 +268,21 @@
         type: Number,
         default: 3
       },
+      labelData: {
+        type: Array,
+        default: function () { return []; }
+      },
       labelRotate: {
         type: Number,
         default: -45
       },
-      labelColor: {
-        type: String,
-        default: '#999999'
-      },
       labelSize: {
         type: Number,
         default: 0.7
+      },
+      labelColor: {
+        type: String,
+        default: '#999999'
       },
       height: Number,
       width: Number,
@@ -282,15 +305,23 @@
         minY: padding,
         maxX: viewWidth - padding,
         maxY: viewHeight - padding,
-        minBarHeight: this.minBarHeight,
+        minBarHeight: this.minBarHeight
+      };
+      var labelProps = {
+        minX: padding,
+        minY: padding,
+        maxX: viewWidth - padding,
+        maxY: viewHeight - padding,
+        labelData: this.labelData,
         labelRotate: this.labelRotate,
-        labelColor: this.labelColor,
-        labelSize: this.labelSize
+        labelSize: this.labelSize,
+        labelColor: this.labelColor
       };
       var props = this.$props;
 
       props.boundary = boundary;
       props.id = 'vue-bars-' + this._uid;
+      props.labelProps = labelProps;
 
       return h('svg', {
         attrs: {

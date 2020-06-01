@@ -37,9 +37,17 @@ export default {
       type: Number,
       default: 3
     },
+    labelData: {
+      type: Array,
+      default: () => []
+    },
     labelRotate: {
       type: Number,
       default: -45
+    },
+    labelSize: {
+      type: Number,
+      default: 0.7
     },
     labelColor: {
       type: String,
@@ -67,7 +75,14 @@ export default {
       minY: padding,
       maxX: viewWidth - padding,
       maxY: viewHeight - padding,
-      minBarHeight: this.minBarHeight,
+      minBarHeight: this.minBarHeight
+    }
+    const labelProps = {
+      minX: padding,
+      minY: padding,
+      maxX: viewWidth - padding,
+      maxY: viewHeight - padding,
+      labelData: this.labelData,
       labelRotate: this.labelRotate,
       labelColor: this.labelColor,
       labelSize: this.labelSize
@@ -76,6 +91,7 @@ export default {
 
     props.boundary = boundary
     props.id = 'vue-bars-' + this._uid
+    props.labelProps = labelProps
 
     return h('svg', {
       attrs: {
