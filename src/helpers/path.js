@@ -125,7 +125,7 @@ export function genLabels (_this, arr, labels, h) {
               attrs: {
                 class: 'v-bars--label-text',
                 style: `text-anchor:middle; fill:${labelColor}; font-size:${labelSize}em;`,
-                title: item.title
+                title: title
               }
             },
             [
