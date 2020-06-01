@@ -25,7 +25,7 @@ import Bars from 'vuebars'
 Vue.use(Bars)
 ```
 
-[Live Demo](https://jsfiddle.net/1bvxyjhk/)
+[Live Demo](https://jsfiddle.net/h1o5z4xe/)
 
 *vue template*
 
