@@ -44,7 +44,7 @@ export function genPoints (inArr, { minX, minY, maxX, maxY, minBarHeight }, { ma
 }
 
 export function genBars (_this, arr, h) {
-  const { maxX } = _this.boundary
+  const { maxX, maxY, labelRotate, labelColor, labelSize } = _this.boundary
   const totalWidth = (maxX) / (arr.length - 1)
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5)

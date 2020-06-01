@@ -46,6 +46,9 @@
     "rollup-plugin-buble": "^0.19.6",
     "uglify-js": "^3.4.9",
     "vbuild": "^7.2.4",
-    "vue-github-badge": "^1.0.1"
+    "vue-github-badge": "^1.0.1",
+    "vue-nav-tabs": "^0.5.7",
+    "vue-slider-component": "^3.1.4",
+    "vue-swatches": "^2.0.3"
   }
 }
