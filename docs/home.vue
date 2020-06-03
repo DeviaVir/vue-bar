@@ -6,11 +6,12 @@
     <p class="headline">Simple, elegant spark bars for Vue.js</p>
     <bars
       :key="data"
-      :data="getData()"
+      :data="data"
       :gradient="[color1, color2]"
       :barWidth="barWidth"
       :rounding="radius"
       :padding="padding"
+      :labelData="getLabelData()"
       :labelColor="labelColor"
       :labelRotate="labelRotate"
       :labelSize="labelSize"
@@ -114,8 +115,8 @@
     },
 
     methods: {
-      getData: function () {
-        return this.showLabels ? this.data : this.data.map(item => item.value);
+      getLabelData: function () {
+        return this.showLabels ? this.labelData : [];
       }
     },
 
@@ -133,7 +134,8 @@
     },
 
     created () {
-      this.data = [{value: 1, title: '#1'}, {value: 2, title: '#2'}, {value: 5, title: '#3'}, {value: 9, title: '#4'}, {value: 5, title: '#5'}, {value: 10, title: '#6'}, {value: 3, title: '#7'}, {value: 5, title: '#8'}, {value: 8, title: '#9'}, {value: 12, title: '#10'}, {value: 1, title: '#11'}, {value: 8, title: '#12'}, {value: 2, title: '#13'}, {value: 9, title: '#14'}, {value: 10, title: '#15'}, {value: 2, title: '#16'}, {value: 9, title: '#17'}, {value: 4, title: '#18'}, {value: 5, title: '#19'}, {value: 6, title: '#20'}, {value: 7, title: '#21'}, {value: 3, title: '#22'}, {value: 2, title: '#23'}, {value: 3, title: '#24'}, {value: 5, title: '#25'}]
+      this.data = [1, 2, 5, 9, 5, 10, 3, 5, 8, 12, 1, 8, 2, 9, 10, 2, 9, 4, 5, 6, 7, 3, 2, 3, 5];
+      this.labelData = ['label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label','label'];
     },
   }
 </script>
