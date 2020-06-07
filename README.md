@@ -40,111 +40,33 @@ Vue.use(Bars)
 
 [vuetrend](https://www.npmjs.org/package/vuetrend) - 📈 Simple, elegant spark lines
 
-## API
+
+## Props
+
+| Name              | Type           | Default     | Description                                                                                                                                                                                                                                       | Example                                                                      |
+| ----------------- | -------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| data              | Number\|Object | `undefined` | The data accepted by Vue Bars is incredibly simple: An array of y-axis values to graph.                                                                                                                                                           | `[120, 149, 193.4, 200, 92]` or `[{ value: 4 }, { value: 6 }, { value: 8 }]` |
+| gradient          | String         | `['#000']`  | Colour can be specified as any SVG-supported format (named, rgb, hex, etc).                                                                                                                                                                       | `['#0FF', '#F0F', '#FF0']`                                                   |
+| width             | Number         | auto        | Set an explicit width for your SVG.                                                                                                                                                                                                               | -                                                                            |
+| height            | Number         | auto        | Set an explicit height for your SVG.                                                                                                                                                                                                              | -                                                                            |
+| padding           | Number         | `8`         | If you set a very large `strokeWidth` on your line, you may notice that it gets "cropped" towards the edges.                                                                                                                                      | -                                                                            |
+| rounding          | Number         | `2`         | To control radius on each bar's corners                                                                                                                                                                                                           | -                                                                            |
+| barWidth          | Number         | `4`         | Set width of each bar                                                                                                                                                                                                                             | -                                                                            |
+| labelRotate       | Number         | `-45`       | To control rotation of labels                                                                                                                                                                                                                     | -                                                                            |
+| labelSize         | Number         | `0.7`       | To control size of labels                                                                                                                                                                                                                         | -                                                                            |
+| labelColor        | String         | `#999`      | To control color of labels                                                                                                                                                                                                                        | -                                                                            |
+| labelData         | String         | `[]`        | Array of strings                                                                                                                                                                                                                                  | `['label1','label2','label3']`                                               |
+| minBarHeight      | Number         | `3`         | Minimum height                                                                                                                                                                                                                                    | -                                                                            |
+| autoDraw          | Boolean        | `false`     | Allow the line to draw itself on mount. Set to `true` to enable, and customize using `autoDrawDuration` and `autoDrawEasing`.                                                                                                                     | -                                                                            |
+| growDuration      | Number         | `0.5`       | The amount of time, in seconds, that the autoDraw animation should span. This prop has no effect if `autoDraw` isn't set to `true`.                                                                                                               | -                                                                            |
+| max               | Number         | `-Infinity` | Specify max value                                                                                                                                                                                                                                 | -                                                                            |
+| min               | Number         | `Infinity`  | Specify min value, This is useful if you have multiple lines. See [#8](https://github.com/QingWei-Li/vue-trend/issues/8)                                                                                                                          | -                                                                            |
+
 
 #### SVG Props
 
 By default, all properties not recognized by Vue Bars will be delegated to the SVG. The line inherits these properties if none of its own override them.
 
-Additionally you can use the following properties to customize your bar graph further:
-
-```
-- rounding // specify how round your bars should be
-- barWidth // specify how wide your bars should be
-
-```
-
-#### `data`
-| Type            | Required | Default     |
-|-----------------|----------|-------------|
-| [Number\|Object] | ✓        | `undefined` |
-
-The data accepted by Vue Bars is incredibly simple: An array of y-axis values to graph.
-
-Vue Bars takes care of normalization, so don't worry about ensuring the data is in a specific range.
-
-This does mean that all data points will be evenly-spaced. If you have irregularly-spaced data, it will not be properly represented.
-
-As of v1.2.0, you may supply an array of data objects with a `value` property.
-
-###### Example
-```vue
-<bars :data="[120, 149, 193.4, 200, 92]" />
-<bars :data="[{ value: 4 }, { value: 6 }, { value: 8 }]" />
-```
-
-
-#### `gradient`
-| Type     | Required | Default     |
-|----------|----------|-------------|
-| [String] | ✕        | `undefined` |
-
-Vue Bars supports vertical gradients. It accepts an array of 2 colour values, and will fade evenly between them from left to right.
-
-Colour should be specified as a full HEX value.
-
-###### Example
-```vue
-<bars :gradient="['#00FFFF', '#FF00FF']" />
-```
-
-#### `height`
-| Type     | Required | Default     |
-|----------|----------|-------------|
-| Number   | ✕        | `undefined` |
-
-Set an explicit height for your SVG. By default it ensures a 1:4 aspect ratio with the width, and the width expands to fill the container.
-
-Note that in _most_ cases it is sufficient to leave this blank, and just control the size of the parent container.
-
-###### Example
-```vue
-<bars :width="200" :height="200" />
-```
-
-
-#### `padding`
-| Type     | Required | Default     |
-|----------|----------|-------------|
-| Number   | ✕        | `8`         |
-
-If you set a very large `strokeWidth` on your line, you may notice that it gets "cropped" towards the edges. This is because SVGs don't support overflow.
-
-By increasing this number, you expand the space around the line, so that very thick lines aren't cropped.
-
-In most cases you don't need to touch this value.
-
-###### Example
-```vue
-<bars padding="18" />
-```
-
-#### `width`
-| Type     | Required | Default     |
-|----------|----------|-------------|
-| Number   | ✕        | `undefined` |
-
-Set an explicit width for your SVG. By default it ensures a 1:4 aspect ratio with the height, expanding to fill the width of the container.
-
-Note that in _most_ cases it is sufficient to leave this blank, and just control the width of the parent container.
-
-###### Example
-```vue
-<bars :width="200" :height="200" />
-```
-
-## Labels
-
-You can pass an array of objects as data value, and give your labels a `title`. On hover, the label will be displayed.
-
-```vue
-    <bars
-      :data="[{value: 0, title: ''}, {value: 1, title: 'test1'}, {value: 5, title: 'test5'}, {value: 2, title: 'test2'}, {value: 1, title: 'test1'}]"
-      :gradient="gradient"
-      :barWidth="5"
-      :growDuration="1">
-    </bars>
-```
 
 ## On-the-fly reloading
 

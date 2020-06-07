@@ -45,13 +45,9 @@ export default {
       type: Number,
       default: -45
     },
-    labelSize: {
-      type: Number,
-      default: 0.7
-    },
     labelColor: {
       type: String,
-      default: '#999999'
+      default: '#999'
     },
     labelSize: {
       type: Number,

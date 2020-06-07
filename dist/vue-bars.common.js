@@ -104,6 +104,10 @@ function genPoints (inArr, ref, ref$1, hasLabels) {
 function genBars (_this, arr, h) {
   var ref = _this.boundary;
   var maxX = ref.maxX;
+  var maxY = ref.maxY;
+  var labelRotate = ref.labelRotate;
+  var labelColor = ref.labelColor;
+  var labelSize = ref.labelSize;
   var totalWidth = (maxX) / (arr.length - 1);
   if (!_this.barWidth) {
     _this.barWidth = totalWidth - (_this.padding || 5);
@@ -204,7 +208,7 @@ function genLabels (_this, arr, labels, h) {
 }
 
 var Path = {
-  props: ['data', 'boundary', 'barWidth', 'id', 'gradient', 'growDuration', 'max', 'min', 'labelData', 'labelProps'],
+  props: ['data', 'boundary', 'barWidth', 'rounding', 'id', 'gradient', 'growDuration', 'max', 'min', 'labelData', 'labelProps'],
 
   render: function render (h) {
     var ref = this;
@@ -244,6 +248,10 @@ var Bars = {
       type: Number,
       default: 8
     },
+    rounding: {
+      type: Number,
+      default: 2
+    },
     growDuration: {
       type: Number,
       default: 0.5
@@ -272,13 +280,13 @@ var Bars = {
       type: Number,
       default: -45
     },
+    labelColor: {
+      type: String,
+      default: '#999'
+    },
     labelSize: {
       type: Number,
       default: 0.7
-    },
-    labelColor: {
-      type: String,
-      default: '#999999'
     },
     height: Number,
     width: Number,
@@ -310,8 +318,8 @@ var Bars = {
       maxY: viewHeight - padding,
       labelData: this.labelData,
       labelRotate: this.labelRotate,
-      labelSize: this.labelSize,
-      labelColor: this.labelColor
+      labelColor: this.labelColor,
+      labelSize: this.labelSize
     };
     var props = this.$props;
 
