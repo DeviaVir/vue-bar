@@ -1,4 +1,4 @@
-WARNING: project is no longer actively maintained, make sure to update any dependencies if you plan on using this in your project. (This project does not work with Vue3 and higher.)
+# WARNING: project is no longer actively maintained, make sure to update any dependencies if you plan on using this in your project. (This project does not work with Vue3 and higher.)
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/deviavir/vue-bar/master/media/logo.png" width="500" alt="Vue Bars">
